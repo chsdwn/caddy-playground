@@ -1,0 +1,43 @@
+version: '3.9'
+name: caddy-playground
+
+services:
+  caddy:
+    image: caddy:2.7.5-alpine
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_config:/config
+      - ./caddy_data:/data
+      - ./caddy_static:/srv
+    networks:
+      - caddy
+
+  api:
+    image: api:1
+    build: ./api
+    depends_on:
+      - caddy
+    volumes:
+      - ./api:/api
+      - /api/node_modules
+    networks:
+      - caddy
+
+  client:
+    image: client:1
+    build: ./client
+    depends_on:
+      - api
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    driver: bridge

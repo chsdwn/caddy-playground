@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev": "node --watch-path=. index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
